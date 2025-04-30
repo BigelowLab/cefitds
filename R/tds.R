@@ -43,7 +43,7 @@ cefi_top <- function(uri = top_uri()){
 #' @param domain chr, the name of the dataset catalog to retrieve
 #'   from the regional catalog set to NULL or NA to skip
 #' @param ... other arguments for `cefi_top()`
-#' @return a TopCatalog object
+#' @return a TopCatalog object or possubly NULL if there is some error
 cefi_region <- function(region = "northwest_atlantic", 
                         domain = "full_domain",
                         ...){
@@ -58,10 +58,17 @@ cefi_region <- function(region = "northwest_atlantic",
     tolower(region[1])
   }
   
-  top = cefi_top(...)$get_catalogs()[[reg]]
+  top = cefi_top(...)
+  if (is.null(top)){
+    warning("top catalog not available:", top_uri())
+    return(NULL)
+  }
+  top = top$get_catalogs()[[reg]]
+  
   if (!is_nullna(domain) && !is.null(top)){
     top = top$get_catalogs()[[domain[1]]]
   }
+  
   top
 }
 
@@ -77,18 +84,19 @@ cefi_region <- function(region = "northwest_atlantic",
 #' @param vars chr or NULL, that short_name variables of interest
 #' @param ... other arguments for `cefi_top()`
 #' @return a CatalogNode or a list of DatasetNode objects
-cefi_catalog = function(region = "northwest_atlantic",
-                        domain = "full_domain",
-                        product = c("decadal_forecast", "hindcast", 
-                                    "long_term_projection",
-                                    "seasonal_forecast", 
-                                    "seasonal_forecast_initialization", 
-                                    "seasonal_reforecast")[2],
-                        period = c("daily", "monthly", "yearly")[2],
-                        format = c("raw", "regrid")[2],
-                        what = "latest",
-                        vars = c("btm_o2", "btm_temp"),
-                        ...){
+query_cefi = function(region = "northwest_atlantic",
+                      domain = "full_domain",
+                      product = c("decadal_forecast", "hindcast", 
+                                  "long_term_projection",
+                                  "seasonal_forecast", 
+                                  "seasonal_forecast_initialization", 
+                                  "seasonal_reforecast")[2],
+                      period = c("daily", "monthly", "yearly")[2],
+                      format = c("raw", "regrid")[2],
+                      what = "latest",
+                      vars = c("btm_o2", "btm_temp"),
+                      as = c("node", "url", "catalog"),
+                      ...){
   
   top = cefi_region(region[1], domain = domain[1], ...)
   if (!is.null(top) && !is_nullna(product[[1]])){

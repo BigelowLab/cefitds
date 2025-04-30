@@ -30,7 +30,7 @@ suppressPackageStartupMessages({
   library(tidync)
 })
 
-datasets = cefi_catalog(region = "northwest_atlantic",
+datasets = query_cefi(region = "northwest_atlantic",
                         product = "hindcast",
                         period = "monthly",
                         vars = c("btm_o2", "btm_temp"))

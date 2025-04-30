@@ -16,7 +16,7 @@ from the regional catalog set to NULL or NA to skip}
 \item{...}{other arguments for \code{cefi_top()}}
 }
 \value{
-a TopCatalog object
+a TopCatalog object or possubly NULL if there is some error
 }
 \description{
 Get a TopCatalog for a specific region
