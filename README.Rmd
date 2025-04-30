@@ -1,0 +1,52 @@
+---
+title: "cefitds"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+CEFI THREDDS catalog navigation using R
+
+# Requirments
+
+	+ [R v4.1+](https://www.r-project.org/)
+	+ [thredds](https://CRAN.R-project.org/package=thredds)
+
+# Installation
+
+```
+remotes::install_github("BigelowLab/cefitds")
+```
+
+# Usage
+
+Retrieve DatasetNode objects for a specific region, product suite and set of variables.  Each object contains the URL for the NetCDF connection.
+
+```{r usage}
+suppressPackageStartupMessages({
+  library(cefitds)
+  library(tidync)
+})
+
+datasets = cefi_catalog(region = "northwest_atlantic",
+                        product = "hindcast",
+                        period = "monthly",
+                        vars = c("btm_o2", "btm_temp"))
+datasets
+```
+
+
+Pull the URLs out.
+
+```{r urls}
+urls = extract_url(datasets)
+urls
+```
+
+Now use the [cefi]() package to open the connection.
+
+```{r nc_open, warning=FALSE, message = FALSE}
+tidync::tidync(urls[1])
+```

@@ -1,0 +1,17 @@
+Package: cefitds
+Type: Package
+Title: Access the CFIE THREDDS catalog
+Version: 0.1.0
+Author: Ben Tupper [aut, cre] <btupper@bigelow.org>
+Maintainer: Ben Tupper <btupper@bigelow.org>
+URL: https://github.com/bigelowlab/cefitds
+Description: R tools access CEFI's THREDDS catalogs.
+License: MIT + file LICENSE
+Encoding: UTF-8
+RoxygenNote: 7.3.2
+Roxygen: list(markdown = TRUE)
+Imports:
+  utils,
+  thredds
+Suggests:
+  httr
