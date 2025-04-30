@@ -1,3 +1,6 @@
+
+
+
 #' Browse a catalog page if interactive
 #' 
 #' @export
@@ -47,13 +50,9 @@ cefi_top <- function(uri = top_uri()){
 cefi_region <- function(region = "northwest_atlantic", 
                         domain = "full_domain",
                         ...){
-  regions = c(arctic = "arctic", 
-              glakes = "great_lakes", 
-              nep = "northeast_pacific" ,
-              nwa = "northwest_atlantic",
-              pacis = "pacific_islands")
-  reg = if (tolower(region[1]) %in% names(regions)){
-    regions[tolower(region[1])]
+
+  reg = if (tolower(region[1]) %in% names(CEFI_REGIONS)){
+    CEFI_REGIONS[tolower(region[1])]
   } else {
     tolower(region[1])
   }

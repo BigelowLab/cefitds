@@ -1,6 +1,6 @@
 Package: cefitds
 Type: Package
-Title: Access the CFIE THREDDS catalog
+Title: Access the CEFI THREDDS catalog
 Version: 0.1.0
 Author: Ben Tupper [aut, cre] <btupper@bigelow.org>
 Maintainer: Ben Tupper <btupper@bigelow.org>
@@ -10,6 +10,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 RoxygenNote: 7.3.2
 Roxygen: list(markdown = TRUE)
+LazyData: TRUE
 Imports:
   utils,
   thredds
