@@ -28,6 +28,7 @@ Retrieve DatasetNode objects for a specific region, product suite and set of var
 suppressPackageStartupMessages({
   library(cefitds)
   library(tidync)
+  library(dplyr)
 })
 
 datasets = query_cefi(region = "northwest_atlantic",
@@ -41,12 +42,12 @@ datasets
 Pull the URLs out.
 
 ```{r urls}
-urls = extract_url(datasets)
-urls
+r = node_extract_table(datasets) |>
+  dplyr::glimpse()
 ```
 
 Now use the [cefi]() package to open the connection.
 
 ```{r nc_open, warning=FALSE, message = FALSE}
-tidync::tidync(urls[1])
+tidync::tidync(r$url[1])
 ```

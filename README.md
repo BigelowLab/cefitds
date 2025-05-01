@@ -22,9 +22,10 @@ connection.
 suppressPackageStartupMessages({
   library(cefitds)
   library(tidync)
+  library(dplyr)
 })
 
-datasets = cefi_catalog(region = "northwest_atlantic",
+datasets = query_cefi(region = "northwest_atlantic",
                         product = "hindcast",
                         period = "monthly",
                         vars = c("btm_o2", "btm_temp"))
@@ -37,7 +38,7 @@ datasets
     ##   url: Projects/CEFI/regional_mom6/cefi_portal/northwest_atlantic/full_domain/hindcast/monthly/regrid/latest/btm_o2.nwa.full.hcast.monthly.regrid.r20230520.199301-201912.nc
     ##   name: btm_o2.nwa.full.hcast.monthly.regrid.r20230520.199301-201912.nc
     ##   dataSize: 321.1
-    ##   date: 2025-04-29T06:26:37.658Z
+    ##   date: 2025-05-01T06:21:57.505Z
     ## 
     ## $`btm_temp.nwa.full.hcast.monthly.regrid.r20230520.199301-201912.nc`
     ## DatasetNode (R6): 
@@ -45,24 +46,40 @@ datasets
     ##   url: Projects/CEFI/regional_mom6/cefi_portal/northwest_atlantic/full_domain/hindcast/monthly/regrid/latest/btm_temp.nwa.full.hcast.monthly.regrid.r20230520.199301-201912.nc
     ##   name: btm_temp.nwa.full.hcast.monthly.regrid.r20230520.199301-201912.nc
     ##   dataSize: 348.1
-    ##   date: 2025-04-29T06:26:27.754Z
+    ##   date: 2025-05-01T06:21:46.377Z
+    ## 
+    ## attr(,"class")
+    ## [1] "cefi_dataset_nodes" "list"
 
 Pull the URLs out.
 
 ``` r
-urls = extract_url(datasets)
-urls
+r = node_extract_table(datasets) |>
+  dplyr::glimpse()
 ```
 
-    ##                                                                                                                                             btm_o2.nwa.full.hcast.monthly.regrid.r20230520.199301-201912.nc 
-    ##   "http://psl.noaa.gov/thredds/dodsC/Projects/CEFI/regional_mom6/cefi_portal/northwest_atlantic/full_domain/hindcast/monthly/regrid/latest/btm_o2.nwa.full.hcast.monthly.regrid.r20230520.199301-201912.nc" 
-    ##                                                                                                                                           btm_temp.nwa.full.hcast.monthly.regrid.r20230520.199301-201912.nc 
-    ## "http://psl.noaa.gov/thredds/dodsC/Projects/CEFI/regional_mom6/cefi_portal/northwest_atlantic/full_domain/hindcast/monthly/regrid/latest/btm_temp.nwa.full.hcast.monthly.regrid.r20230520.199301-201912.nc"
+    ## Rows: 2
+    ## Columns: 15
+    ## $ name               <chr> "btm_o2.nwa.full.hcast.monthly.regrid.r20230520.199…
+    ## $ dataSize           <dbl> 321.1, 348.1
+    ## $ variable_name      <chr> "btm_o2", "btm_temp"
+    ## $ region             <chr> "nwa", "nwa"
+    ## $ subdomain          <chr> "full", "full"
+    ## $ experiment_type    <chr> "hcast", "hcast"
+    ## $ output_frequency   <chr> "monthly", "monthly"
+    ## $ grid_type          <chr> "regrid", "regrid"
+    ## $ release            <chr> "r20230520", "r20230520"
+    ## $ start_date         <date> 1993-01-01, 1993-01-01
+    ## $ end_date           <date> 2019-12-01, 2019-12-01
+    ## $ ensemble_type      <lgl> NA, NA
+    ## $ ensemble_info      <lgl> NA, NA
+    ## $ initalization_date <lgl> NA, NA
+    ## $ url                <chr> "http://psl.noaa.gov/thredds/dodsC/Projects/CEFI/re…
 
 Now use the [cefi]() package to open the connection.
 
 ``` r
-tidync::tidync(urls[1])
+tidync::tidync(r$url[1])
 ```
 
     ## 

@@ -13,7 +13,7 @@ query_cefi(
   format = c("raw", "regrid")[2],
   what = "latest",
   vars = c("btm_o2", "btm_temp"),
-  as = c("node", "url", "catalog"),
+  as = c("node", "table", "catalog"),
   ...
 )
 }
@@ -35,7 +35,7 @@ query_cefi(
 \item{...}{other arguments for \code{cefi_top()}}
 }
 \value{
-a CatalogNode or a list of DatasetNode objects
+a CatalogNode or a \code{cefi_dataset_nodes} class list of DatasetNode objects
 }
 \description{
 Retrieve a CEFI data catalog

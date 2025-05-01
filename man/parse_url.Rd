@@ -5,11 +5,10 @@
 \title{Parse a cefi URL into a table}
 \usage{
 parse_url(
-  x = c("sfc_co3_sol_calc.nwa.full.hcast.monthly.raw.r20230520.199301-201912.nc",
-    "eparag100.nwa.full.hcast.monthly.raw.r20230520.199301-201912.nc",
-    "sfc_no3lim_lgp.nwa.full.hcast.monthly.raw.r20230520.199301-201912.nc",
-    "sfc_nh4lim_lgp.nwa.full.hcast.monthly.regrid.r20230520.199301-201912.nc",
-    "hfevapds.nwa.full.hcast.monthly.raw.r20230520.199301-201912.nc")
+  x = c("btm_htotal.nwa.full.hcast.daily.raw.r20230520.199301-201912.nc",
+    "phycos.nwa.full.hcast.daily.regrid.r20230520.199301-201912.nc",
+    "intppdiat.nwa.full.hcast.monthly.raw.r20230520.199301-201912.nc",
+    "ffetot_btm.nwa.full.hcast.monthly.regrid.r20230520.199301-201912.nc")
 )
 }
 \arguments{

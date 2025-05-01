@@ -82,7 +82,7 @@ cefi_region <- function(region = "northwest_atlantic",
 #' @param what chr or NULL, the suite to retrieve, generally "latest"
 #' @param vars chr or NULL, that short_name variables of interest
 #' @param ... other arguments for `cefi_top()`
-#' @return a CatalogNode or a list of DatasetNode objects
+#' @return a CatalogNode or a `cefi_dataset_nodes` class list of DatasetNode objects
 query_cefi = function(region = "northwest_atlantic",
                       domain = "full_domain",
                       product = c("decadal_forecast", "hindcast", 
@@ -94,7 +94,7 @@ query_cefi = function(region = "northwest_atlantic",
                       format = c("raw", "regrid")[2],
                       what = "latest",
                       vars = c("btm_o2", "btm_temp"),
-                      as = c("node", "url", "catalog"),
+                      as = c("node", "table", "catalog"),
                       ...){
   
   top = cefi_region(region[1], domain = domain[1], ...)
@@ -110,6 +110,7 @@ query_cefi = function(region = "northwest_atlantic",
             # this swithes the output from TopCatalog to 
             # list of DatasetNode objects - me no like but ok
             top = select_datasets(top, vars = vars)
+            class(top) = c("cefi_dataset_nodes", class(top))
           }
         }
       }
@@ -146,9 +147,29 @@ select_datasets = function(x = cefi_catalog(),
 #' @param x a list of one or more DatasetNodes
 #' @param stub chr, the base URL stub ofr opendap service
 #' @return character vector of URLs for NetCDF resources
-extract_url <- function(x = cefi_catalog(),
+node_extract_url <- function(x = cefi_catalog(),
                         stub = "http://psl.noaa.gov/thredds/dodsC"){
+  if (!inherits(x, "cefi_dataset_nodes")) stop("inout must inherit 'cefi_dataset_nodes'")
   sapply(x, function(x) file.path(stub, x$url))
+}
+
+#' Given one or more DatasetNode objects, extract a table
+#' 
+#' @export
+#' @param x a list of one or more DatasetNodes
+#' @param stub chr, the base URL stub ofr opendap service
+#' @return a table of class "cefi_dataset_table"
+node_extract_table <- function(x = query_cefi(),
+                             stub = "http://psl.noaa.gov/thredds/dodsC"){
+  if (!inherits(x, "cefi_dataset_nodes")) stop("inout must inherit 'cefi_dataset_nodes'")
+  r = sapply(x, function(x) file.path(stub, x$url)) |>
+    parse_url() |>
+    dplyr::mutate(
+      name = sapply(x, function(x) x$name),
+      dataSize = sapply(x, function(x) x$dataSize),
+      .before = 1)
+  class(r) <- c("cefi_dataset_table", class(r))
+  r
 }
 
 
