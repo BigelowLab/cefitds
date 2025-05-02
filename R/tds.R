@@ -1,6 +1,4 @@
 
-
-
 #' Browse a catalog page if interactive
 #' 
 #' @export
@@ -50,9 +48,9 @@ cefi_top <- function(uri = top_uri()){
 cefi_region <- function(region = "northwest_atlantic", 
                         domain = "full_domain",
                         ...){
-
-  reg = if (tolower(region[1]) %in% names(CEFI_REGIONS)){
-    CEFI_REGIONS[tolower(region[1])]
+  
+  reg = if (tolower(region[1]) %in% names(cefi::CEFI_REGIONS)){
+    cefi::CEFI_REGIONS[[tolower(region[1])]]
   } else {
     tolower(region[1])
   }
@@ -81,6 +79,7 @@ cefi_region <- function(region = "northwest_atlantic",
 #' @param format chr or NULL, one of "raw" or "regrid" (default)
 #' @param what chr or NULL, the suite to retrieve, generally "latest"
 #' @param vars chr or NULL, that short_name variables of interest
+#' @param as chr one of "node", "table" (default)
 #' @param ... other arguments for `cefi_top()`
 #' @return a CatalogNode or a `cefi_dataset_nodes` class list of DatasetNode objects
 query_cefi = function(region = "northwest_atlantic",
@@ -94,7 +93,7 @@ query_cefi = function(region = "northwest_atlantic",
                       format = c("raw", "regrid")[2],
                       what = "latest",
                       vars = c("btm_o2", "btm_temp"),
-                      as = c("node", "table", "catalog"),
+                      as = c("node", "table"),
                       ...){
   
   top = cefi_region(region[1], domain = domain[1], ...)
@@ -126,7 +125,7 @@ query_cefi = function(region = "northwest_atlantic",
 #' @param x TopCatalog with datasets
 #' @param vars chr one or more `short_name` variable names
 #' @return list of one or more DatasetNode object
-select_datasets = function(x = cefi_catalog(),
+select_datasets = function(x = query_cefi(),
                             vars = c("btm_o2", "btm_temp")){
   
   if(!inherits(x, "CatalogNode")){
@@ -147,7 +146,7 @@ select_datasets = function(x = cefi_catalog(),
 #' @param x a list of one or more DatasetNodes
 #' @param stub chr, the base URL stub ofr opendap service
 #' @return character vector of URLs for NetCDF resources
-node_extract_url <- function(x = cefi_catalog(),
+node_extract_url <- function(x = query_cefi(),
                         stub = "http://psl.noaa.gov/thredds/dodsC"){
   if (!inherits(x, "cefi_dataset_nodes")) stop("inout must inherit 'cefi_dataset_nodes'")
   sapply(x, function(x) file.path(stub, x$url))
@@ -161,7 +160,7 @@ node_extract_url <- function(x = cefi_catalog(),
 #' @return a table of class "cefi_dataset_table"
 node_extract_table <- function(x = query_cefi(),
                              stub = "http://psl.noaa.gov/thredds/dodsC"){
-  if (!inherits(x, "cefi_dataset_nodes")) stop("inout must inherit 'cefi_dataset_nodes'")
+  if (!inherits(x, "cefi_dataset_nodes")) stop("input must inherit 'cefi_dataset_nodes'")
   r = sapply(x, function(x) file.path(stub, x$url)) |>
     parse_url() |>
     dplyr::mutate(

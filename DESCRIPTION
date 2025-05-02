@@ -13,7 +13,7 @@ Roxygen: list(markdown = TRUE)
 LazyData: TRUE
 Imports:
   utils,
-  thredds
-Suggests:
-  httr,
+  thredds,
   cefi
+Suggests:
+  httr

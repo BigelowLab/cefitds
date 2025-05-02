@@ -9,10 +9,18 @@ knitr::opts_chunk$set(echo = TRUE)
 
 CEFI THREDDS catalog navigation using R
 
-# Requirments
+# Requirements
 
-	+ [R v4.1+](https://www.r-project.org/)
-	+ [thredds](https://CRAN.R-project.org/package=thredds)
+### CRAN 
+  + [R v4.1+](https://www.r-project.org/)
+  
+  + [thredds](https://CRAN.R-project.org/package=thredds)
+	
+### Github
+  + [cefi](https://github.com/BigelowLab/cefi)
+  
+# Suggested
+  + [httr](https://CRAN.R-project.org/package=httr)
 
 # Installation
 
@@ -46,7 +54,7 @@ r = node_extract_table(datasets) |>
   dplyr::glimpse()
 ```
 
-Now use the [cefi]() package to open the connection.
+Now use the [tidync](https://CRAN.R-project.org/package=tidync) package to open the connection.
 
 ```{r nc_open, warning=FALSE, message = FALSE}
 tidync::tidync(r$url[1])

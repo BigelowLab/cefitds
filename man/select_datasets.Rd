@@ -5,7 +5,7 @@
 \title{Filter the datasets for ones starting with the specified
 variable names}
 \usage{
-select_datasets(x = cefi_catalog(), vars = c("btm_o2", "btm_temp"))
+select_datasets(x = query_cefi(), vars = c("btm_o2", "btm_temp"))
 }
 \arguments{
 \item{x}{TopCatalog with datasets}

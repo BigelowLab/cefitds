@@ -4,10 +4,7 @@
 \alias{node_extract_url}
 \title{Given one or more DatasetNode objects, extract the URLs}
 \usage{
-node_extract_url(
-  x = cefi_catalog(),
-  stub = "http://psl.noaa.gov/thredds/dodsC"
-)
+node_extract_url(x = query_cefi(), stub = "http://psl.noaa.gov/thredds/dodsC")
 }
 \arguments{
 \item{x}{a list of one or more DatasetNodes}

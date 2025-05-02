@@ -3,10 +3,21 @@ cefitds
 
 CEFI THREDDS catalog navigation using R
 
-# Requirments
+# Requirements
 
-    + [R v4.1+](https://www.r-project.org/)
-    + [thredds](https://CRAN.R-project.org/package=thredds)
+### CRAN
+
+- [R v4.1+](https://www.r-project.org/)
+
+- [thredds](https://CRAN.R-project.org/package=thredds)
+
+### Github
+
+- [cefi](https://github.com/BigelowLab/cefi)
+
+# Suggested
+
+- [httr](https://CRAN.R-project.org/package=httr)
 
 # Installation
 
@@ -38,7 +49,7 @@ datasets
     ##   url: Projects/CEFI/regional_mom6/cefi_portal/northwest_atlantic/full_domain/hindcast/monthly/regrid/latest/btm_o2.nwa.full.hcast.monthly.regrid.r20230520.199301-201912.nc
     ##   name: btm_o2.nwa.full.hcast.monthly.regrid.r20230520.199301-201912.nc
     ##   dataSize: 321.1
-    ##   date: 2025-05-01T06:21:57.505Z
+    ##   date: 2025-05-02T06:20:16.934Z
     ## 
     ## $`btm_temp.nwa.full.hcast.monthly.regrid.r20230520.199301-201912.nc`
     ## DatasetNode (R6): 
@@ -46,7 +57,7 @@ datasets
     ##   url: Projects/CEFI/regional_mom6/cefi_portal/northwest_atlantic/full_domain/hindcast/monthly/regrid/latest/btm_temp.nwa.full.hcast.monthly.regrid.r20230520.199301-201912.nc
     ##   name: btm_temp.nwa.full.hcast.monthly.regrid.r20230520.199301-201912.nc
     ##   dataSize: 348.1
-    ##   date: 2025-05-01T06:21:46.377Z
+    ##   date: 2025-05-02T06:18:14.125Z
     ## 
     ## attr(,"class")
     ## [1] "cefi_dataset_nodes" "list"
@@ -76,7 +87,8 @@ r = node_extract_table(datasets) |>
     ## $ initalization_date <lgl> NA, NA
     ## $ url                <chr> "http://psl.noaa.gov/thredds/dodsC/Projects/CEFI/re…
 
-Now use the [cefi]() package to open the connection.
+Now use the [tidync](https://CRAN.R-project.org/package=tidync) package
+to open the connection.
 
 ``` r
 tidync::tidync(r$url[1])

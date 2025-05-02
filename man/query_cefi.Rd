@@ -13,7 +13,7 @@ query_cefi(
   format = c("raw", "regrid")[2],
   what = "latest",
   vars = c("btm_o2", "btm_temp"),
-  as = c("node", "table", "catalog"),
+  as = c("node", "table"),
   ...
 )
 }
@@ -31,6 +31,8 @@ query_cefi(
 \item{what}{chr or NULL, the suite to retrieve, generally "latest"}
 
 \item{vars}{chr or NULL, that short_name variables of interest}
+
+\item{as}{chr one of "node", "table" (default)}
 
 \item{...}{other arguments for \code{cefi_top()}}
 }
