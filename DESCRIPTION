@@ -11,8 +11,11 @@ Encoding: UTF-8
 RoxygenNote: 7.3.2
 Roxygen: list(markdown = TRUE)
 LazyData: TRUE
+Depends:
+  R (>= 4.1.0)
 Imports:
   utils,
+  rlang,
   thredds,
   cefi
 Suggests:

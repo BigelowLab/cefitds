@@ -79,7 +79,7 @@ cefi_region <- function(region = "northwest_atlantic",
 #' @param format chr or NULL, one of "raw" or "regrid" (default)
 #' @param what chr or NULL, the suite to retrieve, generally "latest"
 #' @param vars chr or NULL, that short_name variables of interest
-#' @param as chr one of "node", "table" (default)
+#' @param as chr one of "node", "table" or "catalog" (default)
 #' @param ... other arguments for `cefi_top()`
 #' @return a CatalogNode or a `cefi_dataset_nodes` class list of DatasetNode objects
 query_cefi = function(region = "northwest_atlantic",
@@ -93,7 +93,7 @@ query_cefi = function(region = "northwest_atlantic",
                       format = c("raw", "regrid")[2],
                       what = "latest",
                       vars = c("btm_o2", "btm_temp"),
-                      as = c("node", "table"),
+                      as = c("node", "table", "catalog")[1],
                       ...){
   
   top = cefi_region(region[1], domain = domain[1], ...)
@@ -115,7 +115,10 @@ query_cefi = function(region = "northwest_atlantic",
       }
     }
   }
-  top
+  switch(tolower(as[1]),
+         "table" = node_extract_table(top),
+         "catalog" = node_extract_table(top) |> match_catalog_table(),
+         top)
 }
 
 #' Filter the datasets for ones starting with the specified

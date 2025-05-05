@@ -29,6 +29,8 @@ Retrieve DatasetNode objects for a specific region, product suite and
 set of variables. Each object contains the URL for the NetCDF
 connection.
 
+## Query the THREDDS catalog
+
 ``` r
 suppressPackageStartupMessages({
   library(cefitds)
@@ -36,11 +38,11 @@ suppressPackageStartupMessages({
   library(dplyr)
 })
 
-datasets = query_cefi(region = "northwest_atlantic",
-                        product = "hindcast",
-                        period = "monthly",
-                        vars = c("btm_o2", "btm_temp"))
-datasets
+nodes = query_cefi(region = "northwest_atlantic",
+                   product = "hindcast",
+                   period = "monthly",
+                   vars = c("btm_o2", "btm_temp"))
+nodes
 ```
 
     ## $`btm_o2.nwa.full.hcast.monthly.regrid.r20230520.199301-201912.nc`
@@ -49,7 +51,7 @@ datasets
     ##   url: Projects/CEFI/regional_mom6/cefi_portal/northwest_atlantic/full_domain/hindcast/monthly/regrid/latest/btm_o2.nwa.full.hcast.monthly.regrid.r20230520.199301-201912.nc
     ##   name: btm_o2.nwa.full.hcast.monthly.regrid.r20230520.199301-201912.nc
     ##   dataSize: 321.1
-    ##   date: 2025-05-02T06:20:16.934Z
+    ##   date: 2025-05-03T06:29:23.704Z
     ## 
     ## $`btm_temp.nwa.full.hcast.monthly.regrid.r20230520.199301-201912.nc`
     ## DatasetNode (R6): 
@@ -57,16 +59,22 @@ datasets
     ##   url: Projects/CEFI/regional_mom6/cefi_portal/northwest_atlantic/full_domain/hindcast/monthly/regrid/latest/btm_temp.nwa.full.hcast.monthly.regrid.r20230520.199301-201912.nc
     ##   name: btm_temp.nwa.full.hcast.monthly.regrid.r20230520.199301-201912.nc
     ##   dataSize: 348.1
-    ##   date: 2025-05-02T06:18:14.125Z
+    ##   date: 2025-05-03T06:29:16.916Z
     ## 
     ## attr(,"class")
     ## [1] "cefi_dataset_nodes" "list"
 
-Pull the URLs out.
+#### As a table
+
+You can transform the above to be a simpler table.
 
 ``` r
-r = node_extract_table(datasets) |>
-  dplyr::glimpse()
+table = query_cefi(region = "northwest_atlantic",
+                   product = "hindcast",
+                   period = "monthly",
+                   vars = c("btm_o2", "btm_temp"),
+                   as = "table")
+dplyr::glimpse(table)
 ```
 
     ## Rows: 2
@@ -87,11 +95,53 @@ r = node_extract_table(datasets) |>
     ## $ initalization_date <lgl> NA, NA
     ## $ url                <chr> "http://psl.noaa.gov/thredds/dodsC/Projects/CEFI/re…
 
-Now use the [tidync](https://CRAN.R-project.org/package=tidync) package
-to open the connection.
+#### As a CEFI catalog
+
+Or perhaps more useful as catalog CEFI records.
 
 ``` r
-tidync::tidync(r$url[1])
+catalog = query_cefi(region = "northwest_atlantic",
+                   product = "hindcast",
+                   period = "monthly",
+                   vars = c("btm_o2", "btm_temp"),
+                   as = "catalog")
+dplyr::glimpse(catalog)
+```
+
+    ## Rows: 2
+    ## Columns: 24
+    ## $ cefi_filename         <chr> "btm_o2.nwa.full.hcast.monthly.regrid.r20230520.…
+    ## $ cefi_variable         <chr> "btm_o2", "btm_temp"
+    ## $ cefi_long_name        <chr> "Bottom Oxygen", "Bottom Temperature"
+    ## $ cefi_unit             <chr> "mol kg-1", "deg C"
+    ## $ cefi_output_frequency <chr> "monthly", "monthly"
+    ## $ cefi_grid_type        <chr> "regrid", "regrid"
+    ## $ cefi_rel_path         <chr> "cefi_portal/northwest_atlantic/full_domain/hind…
+    ## $ cefi_ori_filename     <chr> "ocean_cobalt_btm.199301-201912.btm_o2.nc", "oce…
+    ## $ cefi_archive_version  <chr> "/archive/acr/fre/NWA/2023_04/NWA12_COBALT_2023_…
+    ## $ cefi_run_xml          <chr> "N/A", "N/A"
+    ## $ cefi_region           <chr> "nwa", "nwa"
+    ## $ cefi_subdomain        <chr> "full", "full"
+    ## $ cefi_experiment_type  <chr> "hindcast", "hindcast"
+    ## $ cefi_experiment_name  <chr> "nwa12_cobalt", "nwa12_cobalt"
+    ## $ cefi_release          <chr> "r20230520", "r20230520"
+    ## $ cefi_date_range       <chr> "199301-201912", "199301-201912"
+    ## $ cefi_init_date        <chr> "N/A", "N/A"
+    ## $ cefi_ensemble_info    <chr> "N/A", "N/A"
+    ## $ cefi_forcing          <chr> "N/A", "N/A"
+    ## $ cefi_data_doi         <chr> "10.5281/zenodo.7893386", "10.5281/zenodo.789338…
+    ## $ cefi_paper_doi        <chr> "10.5194/gmd-16-6943-2023", "10.5194/gmd-16-6943…
+    ## $ cefi_aux              <chr> "Postprocessed Data : regrid to regular grid", "…
+    ## $ cefi_ori_category     <chr> "ocean_cobalt_btm", "ocean_cobalt_btm"
+    ## $ cefi_opendap          <chr> "http://psl.noaa.gov/thredds/dodsC/Projects/CEFI…
+
+It is this latter you can use to access data. Below we show how to open
+the dataset, but to do more see the documentation for the [cefi R
+package](https://github.com/BigelowLab/cefi).
+
+``` r
+x = cefi::cefi_open(dplyr::slice(catalog, 1))
+x
 ```
 
     ## 
